@@ -51,11 +51,16 @@ class RegisterController extends Controller
      */
     public function register(UserCreateRequest $request)
     {
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        logger()->debug($user);
+
+        // ログイン状態にする
+        $this->guard()->login($user);
 
         return redirect()->route('memo.index');
     }
